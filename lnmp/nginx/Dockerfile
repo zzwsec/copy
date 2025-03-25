@@ -10,8 +10,8 @@
 FROM alpine:latest AS builder
 
 # Docker Build Arguments
-ARG NGX_LVER
-ARG ZSTD_LVER
+ARG NGX_LVER="1.27.4"
+ARG ZSTD_LVER="1.5.7"
 ARG NGX_J="4"
 
 RUN set -ex \
