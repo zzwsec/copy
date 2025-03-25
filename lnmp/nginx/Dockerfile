@@ -55,7 +55,7 @@ ARG NGX_LVER
 
 COPY --from=builder /tmp/nginx-${NGX_LVER}/objs/*.so /etc/nginx/modules/
 
-COPY html /usr/share/nginx/html
+# COPY html /usr/share/nginx/html
 
 RUN set -ex \
         && apk update && apk upgrade \
