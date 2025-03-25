@@ -6,10 +6,6 @@
 # https://github.com/google/ngx_brotli
 # https://github.com/facebook/zstd
 # https://github.com/kejilion/docker
-#
-# Licensed under the Apache License, Version 2.0.
-# Distributed on an "AS IS" basis, WITHOUT WARRANTIES.
-# See http://www.apache.org/licenses/LICENSE-2.0 for details.
 
 FROM alpine:latest AS builder
 
