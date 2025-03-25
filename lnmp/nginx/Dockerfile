@@ -1,6 +1,6 @@
 # Description: Self-compiled NGINX with Brotli and Zstandard compression
 #
-# Copyright (C) 2025 honeok <honeok@duck.com>
+# Copyright (C) 2025 zzwsec <zzwsec@duck.com>
 #
 # References:
 # https://github.com/google/ngx_brotli
