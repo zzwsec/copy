@@ -51,7 +51,7 @@ RUN set -ex \
 
 FROM nginx:alpine
 
-ARG NGX_LVER
+ARG NGX_LVER="1.27.4"
 
 COPY --from=builder /tmp/nginx-${NGX_LVER}/objs/*.so /etc/nginx/modules/
 
