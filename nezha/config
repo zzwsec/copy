@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>小鸡监控</title>
     <script type="speculationrules">
     {
@@ -29,22 +29,36 @@
         h1, h2, h3, h4, h5 {
             font-family: 'MiSans', sans-serif;
         }
+
         /* 隐藏 footer */
         footer {
             display: none;
         }
-        /* Sakana 样式 */
-        html {
-            background: none;
+
+        /* 确保 html 和 body 不干扰固定定位 */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: auto; /* 防止溢出隐藏影响定位 */
         }
-        html .sakana-box {
-            position: fixed;
-            right: 0;
-            bottom: 0;
-            transform-origin: 100% 100%;
-            pointer-events: auto; /* 确保支持鼠标交互 */
+
+        /* Sakana 样式 */
+        .sakana-box {
+            position: fixed !important; /* 强制固定定位 */
+            right: 0 !important; /* 紧贴右下角 */
+            bottom: 0 !important;
+            transform-origin: 150% 150%; /* 右下角缩放基准 */
+            pointer-events: auto; /* 允许交互 */
             user-select: none; /* 防止选中文本 */
-            z-index: 1000; /* 确保在最上层 */
+            z-index: 10000; /* 悬浮在所有内容上 */
+        }
+
+        /* 确保分组切换按钮可点击 */
+        .group-switch, .btn, button, [role="button"] {
+            position: relative;
+            z-index: 20000; /* 高于 Sakana */
+            pointer-events: auto !important; /* 强制允许交互 */
         }
     </style>
 </head>
@@ -54,36 +68,57 @@
 
     <!-- 自定义配置 -->
     <script>
-    window.CustomBackgroundImage = 'https://i.111666.best/image/V9z8KQ4pevgmK2RhXrL0S1.jpeg';
-    window.CustomMobileBackgroundImage = 'https://i.111666.best/image/GSUnURu1O6ZCgBdNoYC4O0.png';
-    window.CustomLogo = 'https://i.111666.best/image/CEUuYeK9qJGloGMcxiK4gj.png';
-    window.CustomIllustration = "https://s2.loli.net/2025/03/15/wdHrqVUOAzCbgp8.png";
-    window.CustomDesc = '小鸡监控';
-    window.ShowNetTransfer = true;
-    window.DisableAnimatedMan = false;
-    window.FixedTopServerName = true;
-    window.CustomLinks = '[{"link":"https://github.com/zzwsec","name":"GitHub"}]';
-    window.ForceTheme = 'light';
+        window.CustomBackgroundImage = 'https://i.111666.best/image/V9z8KQ4pevgmK2RhXrL0S1.jpeg';
+        window.CustomMobileBackgroundImage = 'https://i.111666.best/image/GSUnURu1O6ZCgBdNoYC4O0.png';
+        window.CustomLogo = 'https://i.111666.best/image/CEUuYeK9qJGloGMcxiK4gj.png';
+        window.CustomIllustration = "https://s2.loli.net/2025/03/15/wdHrqVUOAzCbgp8.png";
+        window.CustomDesc = '小鸡监控';
+        window.ShowNetTransfer = true;
+        window.DisableAnimatedMan = false;
+        window.FixedTopServerName = true;
+        window.CustomLinks = '[{"link":"https://github.com/zzwsec","name":"GitHub"}]';
+        window.ForceTheme = 'light';
     </script>
 
     <!-- Sakana 和 Mobile Detect 脚本 -->
     <script src="https://image.catcat.blog/sakana.js"></script>
     <script src="https://image.catcat.blog/mobile-detect.min.js"></script>
     <script>
-    var md = new MobileDetect(window.navigator.userAgent);
-    if (!md.phone()) {
-        Sakana.setMute(false);
-        Sakana.init({
-            el: '.sakana-box',
-            character: 'takina',
-            scale: 0.5,
-            canSwitchCharacter: true,
-            controls: true, // 启用交互控件（如拖动、按压）
-            onSwitchCharacter(character) {
-                console.log(`${character} dayo~`);
-            },
+        var md = new MobileDetect(window.navigator.userAgent);
+
+        // 初始化 Sakana
+        function initSakana() {
+            Sakana.setMute(md.phone()); // 移动端默认静音
+            Sakana.init({
+                el: '.sakana-box',
+                character: 'takina',
+                scale: md.phone() ? 0.3 : 0.5, // 移动端更小缩放
+                canSwitchCharacter: true,
+                controls: true,
+                onSwitchCharacter(character) {
+                    console.log(`${character} dayo~`);
+                },
+            });
+        }
+
+        // 所有设备初始化 Sakana，移动端延迟加载
+        if (!md.phone() || md.tablet()) {
+            initSakana();
+        } else {
+            setTimeout(initSakana, 1000); // 移动端延迟 1 秒初始化
+        }
+
+        // 修复分组切换按钮事件
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.group-switch, .btn, button, [role="button"]').forEach(btn => {
+                btn.addEventListener('touchstart', e => {
+                    e.stopPropagation(); // 阻止 Sakana 事件冒泡
+                }, { passive: false });
+                btn.addEventListener('click', e => {
+                    e.stopPropagation(); // 防止 Sakana 干扰
+                });
+            });
         });
-    }
     </script>
 </body>
 </html>
