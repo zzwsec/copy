@@ -30,25 +30,12 @@
             font-family: 'MiSans', sans-serif;
         }
 
-        /* 隐藏 footer */
-        footer {
-            display: none;
-        }
-
-        /* 确保 html 和 body 不干扰固定定位 */
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: auto; /* 防止溢出隐藏影响定位 */
-        }
-
         /* Sakana 样式 */
         .sakana-box {
             position: fixed !important; /* 强制固定定位 */
             right: 0 !important; /* 紧贴右下角 */
             bottom: 0 !important;
-            transform-origin: 150% 150%; /* 右下角缩放基准 */
+            transform-origin: 100% 100%; /* 右下角缩放基准 */
             pointer-events: auto; /* 允许交互 */
             user-select: none; /* 防止选中文本 */
             z-index: 10000; /* 悬浮在所有内容上 */
@@ -107,18 +94,6 @@
         } else {
             setTimeout(initSakana, 1000); // 移动端延迟 1 秒初始化
         }
-
-        // 修复分组切换按钮事件
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.group-switch, .btn, button, [role="button"]').forEach(btn => {
-                btn.addEventListener('touchstart', e => {
-                    e.stopPropagation(); // 阻止 Sakana 事件冒泡
-                }, { passive: false });
-                btn.addEventListener('click', e => {
-                    e.stopPropagation(); // 防止 Sakana 干扰
-                });
-            });
-        });
     </script>
 </body>
 </html>
