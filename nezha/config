@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>小鸡监控</title>
+    <script type="speculationrules">
+    {
+        "prerender": [{
+            "source": "document",
+            "where": {
+                "and": [
+                    {"href_matches": "\/*"},
+                    {"not": {"href_matches": ["\/wp-*.php", "\/wp-admin\/*", "\/wp-content\/uploads\/*", "\/wp-content\/*", "\/wp-content\/plugins\/*", "\/wp-content\/themes\/argon\/*", "\/*\\?(.+)"]}},
+                    {"not": {"selector_matches": "a[rel~=\"nofollow\"]"}},
+                    {"not": {"selector_matches": ".no-prerender, .no-prerender a"}},
+                    {"not": {"selector_matches": ".no-prefetch, .no-prefetch a"}}
+                ]
+            },
+            "eagerness": "moderate"
+        }]
+    }
+    </script>
+    <style>
+        /* 自定义字体 */
+        * {
+            font-family: 'MiSans', sans-serif;
+        }
+        h1, h2, h3, h4, h5 {
+            font-family: 'MiSans', sans-serif;
+        }
+        /* 隐藏 footer */
+        footer {
+            display: none;
+        }
+        /* Sakana 样式 */
+        html {
+            background: none;
+        }
+        html .sakana-box {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            transform-origin: 100% 100%;
+            pointer-events: auto; /* 确保支持鼠标交互 */
+            user-select: none; /* 防止选中文本 */
+            z-index: 1000; /* 确保在最上层 */
+        }
+    </style>
+</head>
+<body>
+    <!-- Sakana 容器 -->
+    <div class="sakana-box"></div>
+
+    <!-- 自定义配置 -->
+    <script>
+    window.CustomBackgroundImage = 'https://i.111666.best/image/V9z8KQ4pevgmK2RhXrL0S1.jpeg';
+    window.CustomMobileBackgroundImage = 'https://i.111666.best/image/GSUnURu1O6ZCgBdNoYC4O0.png';
+    window.CustomLogo = 'https://i.111666.best/image/CEUuYeK9qJGloGMcxiK4gj.png';
+    window.CustomIllustration = "https://s2.loli.net/2025/03/15/wdHrqVUOAzCbgp8.png";
+    window.CustomDesc = '小鸡监控';
+    window.ShowNetTransfer = true;
+    window.DisableAnimatedMan = false;
+    window.FixedTopServerName = true;
+    window.CustomLinks = '[{"link":"https://github.com/zzwsec","name":"GitHub"}]';
+    window.ForceTheme = 'light';
+    </script>
+
+    <!-- Sakana 和 Mobile Detect 脚本 -->
+    <script src="https://image.catcat.blog/sakana.js"></script>
+    <script src="https://image.catcat.blog/mobile-detect.min.js"></script>
+    <script>
+    var md = new MobileDetect(window.navigator.userAgent);
+    if (!md.phone()) {
+        Sakana.setMute(false);
+        Sakana.init({
+            el: '.sakana-box',
+            character: 'takina',
+            scale: 0.5,
+            canSwitchCharacter: true,
+            controls: true, // 启用交互控件（如拖动、按压）
+            onSwitchCharacter(character) {
+                console.log(`${character} dayo~`);
+            },
+        });
+    }
+    </script>
+</body>
+</html>
