@@ -264,12 +264,14 @@ rhel_menu() {
         case "$CHOICE" in
             1) 
                 yum remove -y elrepo-release
-                ([ -n "$KERNELS" ] && rpm -ev --nodeps "$KERNELS"); rhel_install
+                ([ -n "$KERNELS" ] && rpm -ev --nodeps "$KERNELS")
+                rhel_install
             ;;
             2) 
                 yum remove -y elrepo-release
-                ([ -n "$KERNELS" ] && rpm -ev --nodeps "$KERNELS"); \
-                _suc_msg "$(_green 'ELRepo kernel uninstalled. Takes effect after reboot.')"; os_reboot
+                ([ -n "$KERNELS" ] && rpm -ev --nodeps "$KERNELS")
+                _suc_msg "$(_green 'ELRepo kernel uninstalled. Takes effect after reboot.')"
+                os_reboot
             ;;
             *) 
                _red 'Invalid selection.'
