@@ -28,7 +28,7 @@ jobs:
           IPINFO_ASN_LVER="$(wget -qO- --tries=5 "https://download.maxmind.com/app/geoip_download?license_key=$MAXMIND_KEY&edition_id=GeoLite2-ASN&suffix=tar.gz.sha256" | awk '{print $2}' | sed -E 's/.*_([0-9]{8})\.tar\.gz/\1/')"
           IPINFO_CITY_LVER="$(wget -qO- --tries=5 "https://download.maxmind.com/app/geoip_download?license_key=$MAXMIND_KEY&edition_id=GeoLite2-City&suffix=tar.gz.sha256" | awk '{print $2}' | sed -E 's/.*_([0-9]{8})\.tar\.gz/\1/')"
           NGX_LVER="$(wget -qO- --tries=5 "https://api.github.com/repos/nginx/nginx/releases/latest" | grep -oP '"tag_name": "\K[^"]+' | sed 's/release-//')"
-          NGX_ALPINE_LVER="$(docker run --rm nginx:stable-alpine sh -c "nginx -v 2>&1 | awk -F'/' '{print \$NF}'")"
+          NGX_ALPINE_LVER="$(docker run --rm nginx:stable-alpine nginx -v 2>&1 | awk -F'/' '{print $NF}')"
           GEOIP2_TAG="$(wget -qO- --tries=5 "https://api.github.com/repos/leev/ngx_http_geoip2_module/releases/latest" | grep -o '"tag_name": *"[^"]*"' | sed 's/.*"v\?\([^"]*\)".*/\1/')"
           [[ -z "$IPINFO_ASN_LVER" || -z "$IPINFO_CITY_LVER" || -z "$NGX_LVER" || -z "$NGX_ALPINE_LVER" || -z "$GEOIP2_TAG" ]] && echo 'Error: Required parameters cannot be empty.' && exit 1
           echo "IPINFO_CVER=$IPINFO_CVER" >> $GITHUB_ENV
