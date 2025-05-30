@@ -40,22 +40,25 @@ jobs:
       - name: 'Download GeoLite2 mmdb file'
         if: env.IS_RENEW == 1 || github.event_name == 'workflow_dispatch'
         run: |
-          cd ${{ github.workspace }}/ipinfo
+          cd ${{ github.workspace }}/forge/ipinfo
+          # 下载并验证 GeoLite2-ASN
           wget --tries=5 -qO GeoLite2-ASN.tar.gz "https://download.maxmind.com/app/geoip_download?license_key=${MAXMIND_KEY}&edition_id=GeoLite2-ASN&suffix=tar.gz"
-          sleep 1
           wget --tries=5 -qO GeoLite2-ASN.tar.gz.sha256 "https://download.maxmind.com/app/geoip_download?license_key=${MAXMIND_KEY}&edition_id=GeoLite2-ASN&suffix=tar.gz.sha256"
-          sleep 1
           sed -i 's/GeoLite2-ASN_[0-9]*.tar.gz/GeoLite2-ASN.tar.gz/g' GeoLite2-ASN.tar.gz.sha256
           sha256sum -c GeoLite2-ASN.tar.gz.sha256
           tar -zxf GeoLite2-ASN.tar.gz --strip 1
-          sleep 1
+          # 下载并验证 GeoLite2-Country
           wget --tries=5 -qO GeoLite2-Country.tar.gz "https://download.maxmind.com/app/geoip_download?license_key=${MAXMIND_KEY}&edition_id=GeoLite2-Country&suffix=tar.gz"
-          sleep 1
           wget --tries=5 -qO GeoLite2-Country.tar.gz.sha256 "https://download.maxmind.com/app/geoip_download?license_key=${MAXMIND_KEY}&edition_id=GeoLite2-Country&suffix=tar.gz.sha256"
-          sleep 1
           sed -i 's/GeoLite2-Country_[0-9]*.tar.gz/GeoLite2-Country.tar.gz/g' GeoLite2-Country.tar.gz.sha256
           sha256sum -c GeoLite2-Country.tar.gz.sha256
           tar -zxf GeoLite2-Country.tar.gz --strip 1
+          # 下载并验证 GeoLite2-City
+          wget --tries=5 -qO GeoLite2-City.tar.gz "https://download.maxmind.com/app/geoip_download?license_key=${MAXMIND_KEY}&edition_id=GeoLite2-City&suffix=tar.gz"
+          wget --tries=5 -qO GeoLite2-City.tar.gz.sha256 "https://download.maxmind.com/app/geoip_download?license_key=${MAXMIND_KEY}&edition_id=GeoLite2-City&suffix=tar.gz.sha256"
+          sed -i 's/GeoLite2-City_[0-9]*.tar.gz/GeoLite2-City.tar.gz/g' GeoLite2-City.tar.gz.sha256
+          sha256sum -c GeoLite2-City.tar.gz.sha256
+          tar -zxf GeoLite2-City.tar.gz --strip 1
 
       - name: 'Set up Docker QEMU'
         if: env.IS_RENEW == 1 || github.event_name == 'workflow_dispatch'
