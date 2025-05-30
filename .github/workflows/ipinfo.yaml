@@ -23,7 +23,7 @@ jobs:
           fetch-depth: 0
 
       - name: 'Fetch Versions and Determine Build'
-        run: |
+        run: |-
           IPINFO_CVER="$(wget -qO- --tries=5 "https://hub.docker.com/v2/repositories/zzwsec/ipinfo/tags" | grep -o '"name":"[^"]*"' | sed 's/"name":"//;s/"//' | grep -v '^latest$' | sort -Vr | head -n1 || echo "")"
           IPINFO_LVER="$(wget -qO- --tries=5 "https://download.maxmind.com/app/geoip_download?license_key=$MAXMIND_KEY&edition_id=GeoLite2-ASN&suffix=tar.gz.sha256" | awk '{print $2}' | sed -E 's/.*_([0-9]{8})\.tar\.gz/\1/')"
           NGX_LVER="$(wget -qO- --tries=5 "https://api.github.com/repos/nginx/nginx/releases/latest" | grep -oP '"tag_name": "\K[^"]+' | sed 's/release-//')"
@@ -39,7 +39,7 @@ jobs:
 
       - name: 'Download GeoLite2 mmdb file'
         if: env.IS_RENEW == 1 || github.event_name == 'workflow_dispatch'
-        run: |
+        run: |-
           cd ${{ github.workspace }}/ipinfo
           # 下载并验证 GeoLite2-ASN
           wget --tries=5 -qO GeoLite2-ASN.tar.gz "https://download.maxmind.com/app/geoip_download?license_key=${MAXMIND_KEY}&edition_id=GeoLite2-ASN&suffix=tar.gz"
