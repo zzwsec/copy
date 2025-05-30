@@ -27,7 +27,7 @@ jobs:
           IPINFO_CVER="$(wget -qO- --tries=5 "https://hub.docker.com/v2/repositories/zzwsec/ipinfo/tags" | grep -o '"name":"[^"]*"' | sed 's/"name":"//;s/"//' | grep -v '^latest$' | sort -Vr | head -n1 || echo "")"
           IPINFO_LVER="$(wget -qO- --tries=5 "https://download.maxmind.com/app/geoip_download?license_key=$MAXMIND_KEY&edition_id=GeoLite2-ASN&suffix=tar.gz.sha256" | awk -F'[ -._]+' '{print $(NF-2)}'"
           NGX_LVER="$(wget -qO- --tries=5 "https://api.github.com/repos/nginx/nginx/releases/latest" | sed -rn 's|^.*tag_name.*release-(.*)",$|\1|p')"
-          NGX_ALPINE_LVER="$(docker run --rm nginx:stable-alpine -- nginx -v |& awk -F'[/]' '{print $NF}')"
+          NGX_ALPINE_LVER="$(docker run --rm nginx:stable-alpine -- nginx -v 2>&1 | awk -F'[/]' '{print $NF}')"
           GEOIP2_TAG="$(wget -qO- --tries 5 "https://api.github.com/repos/leev/ngx_http_geoip2_module/releases/latest" | jq -r '.tag_name')"
           [[ -z "$IPINFO_LVER" || -z "$NGX_LVER" || -z "$NGX_ALPINE_LVER" || -z "$GEOIP2_TAG" ]] && echo 'Error: Required parameters cannot be empty.' && exit 1
           echo "IPINFO_CVER=$IPINFO_CVER" >> $GITHUB_ENV
