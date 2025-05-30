@@ -40,7 +40,7 @@ jobs:
       - name: 'Download GeoLite2 mmdb file'
         if: env.IS_RENEW == 1 || github.event_name == 'workflow_dispatch'
         run: |
-          cd ${{ github.workspace }}/forge/ipinfo
+          cd ${{ github.workspace }}/ipinfo
           # 下载并验证 GeoLite2-ASN
           wget --tries=5 -qO GeoLite2-ASN.tar.gz "https://download.maxmind.com/app/geoip_download?license_key=${MAXMIND_KEY}&edition_id=GeoLite2-ASN&suffix=tar.gz"
           wget --tries=5 -qO GeoLite2-ASN.tar.gz.sha256 "https://download.maxmind.com/app/geoip_download?license_key=${MAXMIND_KEY}&edition_id=GeoLite2-ASN&suffix=tar.gz.sha256"
