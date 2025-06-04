@@ -138,7 +138,7 @@ cdn_check() {
     if [ "$COUNTRY" != "CN" ]; then
         GITHUB_PROXY=""
     elif [ "$COUNTRY" = "CN" ]; then
-        curl -sL --retry 2 --connect-timeout 5 -w "%{http_code}" "https://files.m.daocloud.io/github.com/zzwsec/zzwsec/raw/master/README.md" -o /dev/null 2>/dev/null | grep -q "^200$" && GITHUB_PROXY='https://files.m.daocloud.io/' || GITHUB_PROXY='https://gh-proxy.com/'
+        curl -sL --retry 2 --connect-timeout 5 -w "%{http_code}" "https://files.m.daocloud.io/github.com/zzwsec/zzwsec/raw/main/README.md" -o /dev/null 2>/dev/null | grep -q "^200$" && GITHUB_PROXY='https://files.m.daocloud.io/' || GITHUB_PROXY='https://gh-proxy.com/'
     else
         GITHUB_PROXY='https://gh-proxy.com/'
     fi
