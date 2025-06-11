@@ -1,0 +1,61 @@
+---
+name: 'Build and Publish etcd'
+
+on:
+  schedule:
+    - cron: '0 16 * * 6'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: 'Build and Publish etcd'
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+    steps:
+      - name: 'Check out repository'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 'Fetch Versions and Determine Build'
+        run: |
+          ETCD_LATEST_VERSION="$(wget -qO- --tries=5 "wget -qO- --tries=5 "https://api.github.com/repos/etcd-io/etcd/releases/latest" | awk -F'\"' '/tag_name/{print substr($(NF-1),2);exit}'"
+          ETCD_CURRENT_VERSION="$(wget -qO- --tries=5 "https://hub.docker.com/v2/repositories/zzwsec/etcd/tags" 2>/dev/null | \
+            jq -r ".results // [] | .[].name" | grep -v "^latest$" | sort -Vr | head -n1 | cut -d'-' -f1 || echo "")"
+          [ -z "$ETCD_LATEST_VERSION" ] && { echo 'Error: Required parameters cannot be empty.'; exit 1; }
+          echo "ETCD_LATEST_VERSION=$ETCD_LATEST_VERSION" >> $GITHUB_ENV
+          echo "ETCD_CURRENT_VERSION=$ETCD_CURRENT_VERSION" >> $GITHUB_ENV
+          if [[ "$(echo -e "$ETCD_LATEST_VERSION\n$ETCD_CURRENT_VERSION" | sort -V | head -n1)" != "$ETCD_LATEST_VERSION" || -z "$ETCD_CURRENT_VERSION" ]]; then
+            echo "IS_RENEW=1" >> "$GITHUB_ENV"
+          fi
+
+      - name: 'Set up Docker QEMU'
+        if: env.IS_RENEW == 1 || github.event_name == 'workflow_dispatch'
+        uses: docker/setup-qemu-action@v3
+
+      - name: 'Set up Docker Buildx'
+        if: env.IS_RENEW == 1 || github.event_name == 'workflow_dispatch'
+        uses: docker/setup-buildx-action@v3
+
+      - name: 'Login to DockerHub'
+        if: env.IS_RENEW == 1 || github.event_name == 'workflow_dispatch'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
+
+      - name: 'Build and push etcd image'
+        if: env.IS_RENEW == 1 || github.event_name == 'workflow_dispatch'
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ github.workspace }}/etcd
+          file: ${{ github.workspace }}/etcd/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          build-args: ETCD_LATEST_VERSION=${{ env.ETCD_LATEST_VERSION }}
+          tags: |
+            ${{ env.DOCKER_USERNAME }}/etcd:${{ env.ETCD_LATEST_VERSION }}
+            ${{ env.DOCKER_USERNAME }}/etcd:latest
+          push: true
