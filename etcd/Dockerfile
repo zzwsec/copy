@@ -7,11 +7,11 @@ RUN --mount=type=cache,target=/var/cache/apk \
     && apk add ca-certificates tzdata \
     && mkdir /var/etcd /var/lib/etcd/ \
     && wget "https://github.com/etcd-io/etcd/releases/download/v${ETCD_LATEST_VERSION}/etcd-v${ETCD_LATEST_VERSION}-${TARGETOS}-${TARGETARCH}.tar.gz" -P /tmp \
-    && tar xf etcd-v${ETCD_LATEST_VERSION}-${TARGETOS}-${TARGETARCH}.tar.gz -C /usr/local/bin/ \
+    && tar xf /tmp/etcd-v${ETCD_LATEST_VERSION}-${TARGETOS}-${TARGETARCH}.tar.gz -C /usr/local/bin/ \
+        --strip-components=1 \
         etcd-v${ETCD_LATEST_VERSION}-${TARGETOS}-${TARGETARCH}/etcd \
         etcd-v${ETCD_LATEST_VERSION}-${TARGETOS}-${TARGETARCH}/etcdctl \
         etcd-v${ETCD_LATEST_VERSION}-${TARGETOS}-${TARGETARCH}/etcdutl \
-        --strip-components=1 \
     && rm -rf /tmp/etcd-v${ETCD_LATEST_VERSION}-${TARGETOS}-${TARGETARCH}.tar.gz
 ENV TZ=Asia/Shanghai
 EXPOSE 2379 2380
